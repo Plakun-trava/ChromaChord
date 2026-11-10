@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaChord — Визуально-звуковой переводчик</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Хедер -->
+    <header class="header">
+        <div class="header-left">
+            <button class="icon-btn" id="burgerBtn" aria-label="Меню">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <button class="icon-btn" id="searchBtn" aria-label="Поиск">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </button>
+        </div>
+        <div class="header-center">
+            <span class="logo-text">CHROMACHORD</span>
+        </div>
+        <div class="header-right">
+            <div class="garage-placeholder">GARAGE</div>
+        </div>
+    </header>
+
+    <!-- Модальное окно поиска -->
+<div class="modal-overlay" id="searchModal">
+    <div class="modal search-modal">
+        <button class="modal-close" id="searchClose" aria-label="Закрыть поиск">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <h3 class="modal-title">Поиск по сайту</h3>
+        <p class="modal-subtitle">Введите запрос для поиска по экспонатам, жанрам или настройкам</p>
+        <div class="search-input-wrapper">
+            <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" class="search-input-big" placeholder="Например: Гжель, джаз, Левитан..." id="searchInput">
+        </div>
+        <p class="search-hint">Пока поиск находится в разработке. Скоро здесь появятся результаты.</p>
+    </div>
+</div>
+
+    <!-- Бургер-меню (скрыто по умолчанию) -->
+    <div class="menu-overlay" id="menuOverlay">
+        <nav class="menu-panel">
+            <button class="menu-close" id="menuClose" aria-label="Закрыть меню">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <ul class="menu-list">
+                <li><button class="menu-item active" data-page="page1">Генерация</button></li>
+                <li><button class="menu-item" data-page="about">О нас</button></li>
+                <li><button class="menu-item" data-page="museum">Музей</button></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- СТРАНИЦА 1: Загрузка и анализ -->
+    <main class="page active" id="page1">
+        <div class="container two-columns">
+            <!-- Левая колонка: Ваше изображение -->
+            <div class="column">
+                <h2 class="section-title">Ваше изображение</h2>
+                <div class="card image-card" id="imageDropZone">
+                    <div class="image-placeholder" id="imagePlaceholder">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <p class="placeholder-text">Перетащите изображение сюда</p>
+                    </div>
+                    <img id="previewImage" class="preview-image" alt="Предпросмотр" style="display: none;">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                </div>
+                <button class="btn btn-primary" id="uploadBtn">Загрузить файл</button>
+            </div>
+
+            <!-- Стрелка между колонками -->
+            <div class="arrow-divider">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </div>
+
+            <!-- Правая колонка: Результат анализа -->
+            <div class="column">
+                <h2 class="section-title">Результат анализа</h2>
+                <div class="card analysis-card">
+                    <div class="analysis-block">
+                        <h3 class="block-title">Палитра</h3>
+                        <div class="palette" id="palette">
+                            <div class="color-dot" style="background-color: #4a4a4a;"></div>
+                            <div class="color-dot" style="background-color: #e8e8e8;"></div>
+                            <div class="color-dot" style="background-color: #5c5c5c;"></div>
+                            <div class="color-dot" style="background-color: #f0f0f0;"></div>
+                        </div>
+                    </div>
+                    <div class="analysis-block">
+                        <div class="metric-row">
+                            <span class="metric-label">Яркость</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 72%;"></div>
+                            </div>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Насыщенность</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Контраст</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Энтропия</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="generateBtn">Сгенерировать звуковую интерпретацию</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- СТРАНИЦА 2: Аудиоплеер и параметры -->
+    <main class="page" id="page2">
+        <div class="container">
+            <!-- Кнопка назад -->
+            <button class="back-btn" id="backBtn" aria-label="Назад">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                <span>Назад к анализу</span>
+            </button>
+
+            <h2 class="section-title">Аудиоплеер</h2>
+            <div class="card player-card">
+                <div class="player-controls">
+                    <button class="play-btn" id="playBtn" aria-label="Воспроизвести">
+                        <svg class="play-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <svg class="pause-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                            <rect x="6" y="4" width="4" height="16"/>
+                            <rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </button>
+                    <div class="player-progress">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="audioProgress" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    <span class="time-display">00:12 / 00:30</span>
+                </div>
+            </div>
+
+            <div class="two-columns results-grid">
+                <!-- Параметры -->
+                <div class="card params-card">
+                    <h3 class="block-title">Параметры</h3>
+                    <div class="slider-row">
+                        <span class="metric-label">Темп</span>
+                        <input type="range" class="custom-slider" min="0" max="100" value="65">
+                    </div>
+                    <div class="slider-row">
+                        <span class="metric-label">Длительность</span>
+                        <input type="range" class="custom-slider" min="0" max="100" value="50">
+                    </div>
+                    <div class="slider-row">
+                        <span class="metric-label">Тембр</span>
+                        <input type="range" class="custom-slider" min="0" max="100" value="30">
+                    </div>
+                </div>
+
+                <!-- Почему так звучит -->
+                <div class="card explanation-card">
+                    <h3 class="block-title">Почему так звучит?</h3>
+                    <p class="explanation-text">
+                        Светлая палитра повлияла на регистр; контраст — на плотность музыкальных событий.
+                        Высокая насыщенность добавила перегруженные тембры, а умеренная энтропия 
+                        создала плавный, но ритмичный паттерн.
+                    </p>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn btn-primary">Экспорт WAV</button>
+                <button class="btn btn-primary" id="rateBtn">Оценить результат</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно оценки -->
+    <div class="modal-overlay" id="rateModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose" aria-label="Закрыть">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <h3 class="modal-title">Оцените результат</h3>
+            <p class="modal-subtitle">Насколько точно система передала настроение изображения?</p>
+            <div class="stars" id="starsContainer">
+                <button class="star" data-value="1" aria-label="1 звезда">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+                <button class="star" data-value="2" aria-label="2 звезды">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+                <button class="star" data-value="3" aria-label="3 звезды">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+                <button class="star" data-value="4" aria-label="4 звезды">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+                <button class="star" data-value="5" aria-label="5 звёзд">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="btn btn-primary modal-submit" id="modalSubmit">Отправить</button>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <span class="footer-text">ChromaChord © 2026</span>
+            <span class="footer-text">Визуально-звуковой переводчик на базе HSV и энтропии Шеннона</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
