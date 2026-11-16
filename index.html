@@ -11,7 +11,6 @@
 </head>
 <body>
 
-    <!-- Хедер -->
     <header class="header">
         <div class="header-left">
             <button class="icon-btn" id="burgerBtn" aria-label="Меню">
@@ -36,29 +35,31 @@
         </div>
     </header>
 
-    <!-- Модальное окно поиска -->
-<div class="modal-overlay" id="searchModal">
-    <div class="modal search-modal">
-        <button class="modal-close" id="searchClose" aria-label="Закрыть поиск">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-        </button>
-        <h3 class="modal-title">Поиск по сайту</h3>
-        <p class="modal-subtitle">Введите запрос для поиска по экспонатам, жанрам или настройкам</p>
-        <div class="search-input-wrapper">
-            <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" class="search-input-big" placeholder="Например: Гжель, джаз, Левитан..." id="searchInput">
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal search-modal">
+            <button class="modal-close" id="searchClose" aria-label="Закрыть поиск">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <h3 class="modal-title">Поиск по сайту</h3>
+            <p class="modal-subtitle">Введите запрос для поиска по экспонатам, жанрам или настройкам</p>
+            <div class="search-input-wrapper">
+                <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" class="search-input-big" placeholder="Например: Тембр, Генерация, Энтропия..." id="searchInput">
+            </div>
+            <!-- НОВЫЙ БЛОК: Сюда будут выводиться результаты поиска -->
+            <div class="search-results" id="searchResults"></div>
+            
+            <p class="search-hint">Поиск работает по разделам и функциям сайта.</p>
+           
         </div>
-        <p class="search-hint">Пока поиск находится в разработке. Скоро здесь появятся результаты.</p>
     </div>
-</div>
 
-    <!-- Бургер-меню (скрыто по умолчанию) -->
     <div class="menu-overlay" id="menuOverlay">
         <nav class="menu-panel">
             <button class="menu-close" id="menuClose" aria-label="Закрыть меню">
@@ -75,10 +76,9 @@
         </nav>
     </div>
 
-    <!-- СТРАНИЦА 1: Загрузка и анализ -->
+    <!-- СТРАНИЦА 1: Генерация -->
     <main class="page active" id="page1">
         <div class="container two-columns">
-            <!-- Левая колонка: Ваше изображение -->
             <div class="column">
                 <h2 class="section-title">Ваше изображение</h2>
                 <div class="card image-card" id="imageDropZone">
@@ -96,7 +96,6 @@
                 <button class="btn btn-primary" id="uploadBtn">Загрузить файл</button>
             </div>
 
-            <!-- Стрелка между колонками -->
             <div class="arrow-divider">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"/>
@@ -104,7 +103,6 @@
                 </svg>
             </div>
 
-            <!-- Правая колонка: Результат анализа -->
             <div class="column">
                 <h2 class="section-title">Результат анализа</h2>
                 <div class="card analysis-card">
@@ -121,25 +119,25 @@
                         <div class="metric-row">
                             <span class="metric-label">Яркость</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 72%;"></div>
+                                <div class="progress-fill" id="brightnessFill" style="width: 72%;"></div>
                             </div>
                         </div>
                         <div class="metric-row">
                             <span class="metric-label">Насыщенность</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 85%;"></div>
+                                <div class="progress-fill" id="saturationFill" style="width: 85%;"></div>
                             </div>
                         </div>
                         <div class="metric-row">
                             <span class="metric-label">Контраст</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 60%;"></div>
+                                <div class="progress-fill" id="contrastFill" style="width: 60%;"></div>
                             </div>
                         </div>
                         <div class="metric-row">
                             <span class="metric-label">Энтропия</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 45%;"></div>
+                                <div class="progress-fill" id="entropyFill" style="width: 45%;"></div>
                             </div>
                         </div>
                     </div>
@@ -149,10 +147,9 @@
         </div>
     </main>
 
-    <!-- СТРАНИЦА 2: Аудиоплеер и параметры -->
+    <!-- СТРАНИЦА 2: Аудиоплеер -->
     <main class="page" id="page2">
         <div class="container">
-            <!-- Кнопка назад -->
             <button class="back-btn" id="backBtn" aria-label="Назад">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"/>
@@ -162,6 +159,7 @@
             </button>
 
             <h2 class="section-title">Аудиоплеер</h2>
+            <audio id="audioPlayer" style="display: none;"></audio>
             <div class="card player-card">
                 <div class="player-controls">
                     <button class="play-btn" id="playBtn" aria-label="Воспроизвести">
@@ -175,50 +173,144 @@
                     </button>
                     <div class="player-progress">
                         <div class="progress-track">
-                            <div class="progress-fill" id="audioProgress" style="width: 40%;"></div>
+                            <div class="progress-fill" id="audioProgress" style="width: 0%;"></div>
                         </div>
                     </div>
-                    <span class="time-display">00:12 / 00:30</span>
+                    <span class="time-display" id="timeDisplay">00:00 / 00:30</span>
                 </div>
             </div>
 
-            <div class="two-columns results-grid">
-                <!-- Параметры -->
-                <div class="card params-card">
-                    <h3 class="block-title">Параметры</h3>
-                    <div class="slider-row">
-                        <span class="metric-label">Темп</span>
-                        <input type="range" class="custom-slider" min="0" max="100" value="65">
+            <div class="results-grid">
+                <div class="results-column">
+                    <div class="card params-card">
+                        <h3 class="block-title">Параметры</h3>
+                        <div class="slider-row">
+                            <span class="metric-label">Темп</span>
+                            <input type="range" class="custom-slider" id="tempoSlider" min="0" max="100" value="31" aria-label="Темп">
+                        </div>
+                        <div class="slider-row">
+                            <span class="metric-label">Длительность</span>
+                            <input type="range" class="custom-slider" id="durationSlider" min="0" max="100" value="25" aria-label="Длительность">
+                        </div>
+                        <div class="slider-row">
+                            <span class="metric-label">Тембр</span>
+                            <input type="range" class="custom-slider" id="timbreSlider" min="0" max="100" value="12" aria-label="Тембр">
+                        </div>
+                        <div class="slider-row">
+                            <span class="metric-label">Плотность</span>
+                            <input type="range" class="custom-slider" id="densitySlider" min="1" max="5" step="1" value="3" aria-label="Плотность">
+                        </div>
                     </div>
-                    <div class="slider-row">
-                        <span class="metric-label">Длительность</span>
-                        <input type="range" class="custom-slider" min="0" max="100" value="50">
-                    </div>
-                    <div class="slider-row">
-                        <span class="metric-label">Тембр</span>
-                        <input type="range" class="custom-slider" min="0" max="100" value="30">
-                    </div>
+                    <button class="btn btn-primary" id="regenerateBtn">Применить</button>
                 </div>
 
-                <!-- Почему так звучит -->
-                <div class="card explanation-card">
-                    <h3 class="block-title">Почему так звучит?</h3>
-                    <p class="explanation-text">
-                        Светлая палитра повлияла на регистр; контраст — на плотность музыкальных событий.
-                        Высокая насыщенность добавила перегруженные тембры, а умеренная энтропия 
-                        создала плавный, но ритмичный паттерн.
-                    </p>
+                <div class="results-column">
+                    <div class="card explanation-card">
+                        <h3 class="block-title">Почему так звучит?</h3>
+                        <p class="explanation-text" id="explanationText">
+                            Светлая палитра повлияла на регистр; контраст — на плотность музыкальных событий.
+                            Высокая насыщенность добавила перегруженные тембры, а умеренная энтропия
+                            создала плавный, но ритмичный паттерн.
+                        </p>
+                    </div>
+                    <button class="btn btn-primary" id="rateBtn">Оценить результат</button>
                 </div>
             </div>
 
-            <div class="actions-row">
-                <button class="btn btn-primary">Экспорт WAV</button>
-                <button class="btn btn-primary" id="rateBtn">Оценить результат</button>
-            </div>
+            <button class="btn btn-primary btn-export" id="exportBtn">Экспорт WAV</button>
         </div>
     </main>
 
-    <!-- Модальное окно оценки -->
+    <!-- СТРАНИЦА 3: О нас -->
+    <main class="page" id="page3">
+        <div class="container">
+            
+
+            <h2 class="section-title">О нас</h2>
+
+            <div class="card about-card">
+                <h3 class="block-title">Кто мы</h3>
+                <p class="about-text">
+                    Мы — команда студентов Российского государственного университета им. А.Н. Косыгина
+                    (Технологии. Дизайн. Искусство). ChromaChord — наш учебный проект, в котором мы
+                    объединили сразу три области: программирование, системный анализ и искусство.
+                </p>
+                
+                <p class="about-text">
+                    Идея проекта родилась из вопроса: <em>может ли изображение звучать?</em> Мы знали, что
+                    люди интуитивно связывают цвета со звуками — светлое кажется быстрым и высоким, тёмное —
+                    медленным и низким. Это явление называется <strong>межмодальным соответствием</strong>,
+                    и оно подтверждено научными исследованиями (Palmer et al., 2013; Spence, 2020).
+                    Наш сайт превращает эту интуицию в точный, воспроизводимый алгоритм.
+                </p>
+            </div>
+
+            <div class="card about-card">
+                <h3 class="block-title">Как это работает</h3>
+                <p class="about-text">
+                    Когда вы загружаете картину, система «смотрит» на неё так же, как вы смотрите на
+                    полотно в музее, но описывает увиденное числами. Она выделяет четыре характеристики:
+                    <strong>оттенок</strong> (какой цвет преобладает), <strong>насыщенность</strong>
+                    (насколько цвет сочный), <strong>яркость</strong> (насколько светлая картина) и
+                    <strong>энтропию</strong> (насколько сложная и пёстрая композиция).
+                </p>
+                <p class="about-text">
+                    Дальше каждая характеристика превращается в музыкальный параметр — по строгим,
+                    заранее записанным правилам. Это не случайная генерация и не «чёрный ящик»
+                    нейросети: одна и та же картина всегда даёт один и тот же звук, и мы можем объяснить,
+                    почему выбран именно этот результат.
+                </p>
+
+                <div class="about-grid">
+                    <div class="about-mini-card">
+                        <div class="about-mini-dot" style="background-color: #e74c3c;"></div>
+                        <h4>Оттенок → Жанр и настроение</h4>
+                        <p>Тёплые цвета (красный, оранжевый) тяготеют к року и металлу, холодные
+                        (синий, фиолетовый) — к блюзу, джазу и эмбиенту. Оттенок также задаёт
+                        тональность: тёплые чаще звучат в мажоре, холодные — в миноре.</p>
+                    </div>
+                    <div class="about-mini-card">
+                        <div class="about-mini-dot" style="background-color: #f39c12;"></div>
+                        <h4>Насыщенность → Тембр</h4>
+                        <p>Чем «ядовитее» и сочнее цвета, тем ярче и плотнее звучат инструменты.
+                        Блеклые, пастельные тона дают мягкий и приглушённый звук, насыщенные —
+                        мощный и экспрессивный.</p>
+                    </div>
+                    <div class="about-mini-card">
+                        <div class="about-mini-dot" style="background-color: #f5e663;"></div>
+                        <h4>Яркость → Темп и регистр</h4>
+                        <p>Светлая картина играет быстрее и выше, тёмная — медленнее и ниже.
+                        Это прямая отсылка к исследованиям: люди устойчиво связывают свет с
+                        высокими частотами и быстрым ритмом.</p>
+                    </div>
+                    <div class="about-mini-card">
+                        <div class="about-mini-dot" style="background-color: #3498db;"></div>
+                        <h4>Энтропия → Плотность событий</h4>
+                        <p>Энтропия — математическая мера «хаоса» в изображении. Пёстрая, детализированная
+                        картина рождает плотный, сложный ритм. Однотонная и спокойная — редкие,
+                        длинные ноты и плавный эмбиент.</p>
+                    </div>
+                </div>
+
+                <p class="about-text">
+                    После того как все четыре числа посчитаны, система сравнивает их с «эталонными»
+                    профилями музыкальных жанров и выбирает наиболее близкие. Из полученного набора
+                    параметров собирается короткая композиция: сначала в формате MIDI (это как
+                    цифровая партитура), затем синтезируется готовый WAV-файл, который можно
+                    прослушать и скачать.
+                </p>
+                <p class="about-text">
+                    <strong>Важно:</strong> ChromaChord не утверждает, что картина «означает» эту музыку.
+                    Звуковая интерпретация — это художественный перевод, способ по-новому почувствовать
+                    произведение, а не его объективный смысл. Особенно это ценно для инклюзивных
+                    сценариев: слабовидящий посетитель может «услышать» палитру и настроение полотна.
+                </p>
+            </div>
+
+            <button class="btn btn-primary btn-export" id="goToGeneratorBtn">Перейти к генерации</button>
+        </div>
+    </main>
+
     <div class="modal-overlay" id="rateModal">
         <div class="modal">
             <button class="modal-close" id="modalClose" aria-label="Закрыть">
@@ -230,37 +322,16 @@
             <h3 class="modal-title">Оцените результат</h3>
             <p class="modal-subtitle">Насколько точно система передала настроение изображения?</p>
             <div class="stars" id="starsContainer">
-                <button class="star" data-value="1" aria-label="1 звезда">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                </button>
-                <button class="star" data-value="2" aria-label="2 звезды">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                </button>
-                <button class="star" data-value="3" aria-label="3 звезды">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                </button>
-                <button class="star" data-value="4" aria-label="4 звезды">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                </button>
-                <button class="star" data-value="5" aria-label="5 звёзд">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                </button>
+                <button class="star" data-value="1" aria-label="1 звезда"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button class="star" data-value="2" aria-label="2 звезды"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button class="star" data-value="3" aria-label="3 звезды"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button class="star" data-value="4" aria-label="4 звезды"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button class="star" data-value="5" aria-label="5 звёзд"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
             </div>
             <button class="btn btn-primary modal-submit" id="modalSubmit">Отправить</button>
         </div>
     </div>
 
-    <!-- Футер -->
     <footer class="footer">
         <div class="container footer-content">
             <span class="footer-text">ChromaChord © 2026</span>
